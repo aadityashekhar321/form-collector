@@ -53,6 +53,13 @@
       <i class="fas fa-exclamation-circle me-2"></i>
       <strong>Error:</strong> <span id="errorMsg"></span>
     </div>
+
+    <!-- 🔥 NEW ADMIN BUTTON - YE ADD KARO! -->
+    <div class="text-center mt-4">
+      <a href="/admin-secret" class="btn btn-outline-dark btn-lg px-4">
+        <i class="fas fa-lock me-2"></i>Admin Login
+      </a>
+    </div>
   </div>
 
   <!-- Confirmation Modal -->
@@ -118,19 +125,11 @@
       confirmModal.show();
     });
 
-        // Confirm button - Send to backend (ye same rakh)
-        document.getElementById('confirmBtn').addEventListener('click', async () => {
-          // ... tera perfect code
-        });
-
-        // Enter key on Confirm button bhi kaam kare  ← YE PERFECT HAI!
-        document.getElementById('confirmBtn').addEventListener('keydown', function (e) {
-          if (e.key === 'Enter') {
-            e.preventDefault();  // ← YE IMPORTANT HAI!
-            this.click();        // ← YE BHI PERFECT
-          }
-        });
-
+    // Confirm button - Send to backend
+    document.getElementById('confirmBtn').addEventListener('click', async () => {
+      sendBtn.classList.add('loading');
+      sendBtn.querySelector('.send-text').style.display = 'none';
+      sendBtn.querySelector('.loading-text').style.display = 'inline';
 
       try {
         const response = await fetch('/submit', {
