@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quick Form</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <style>
+    body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; font-family: 'Segoe UI', sans-serif; }
+    .card { border: none; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); backdrop-filter: blur(10px); }
+    .btn-primary { background: linear-gradient(45deg, #667eea, #764ba2); border: none; border-radius: 50px; padding: 12px 30px; font-weight: 600; transition: all 0.3s; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+    .form-control:focus { border-color: #667eea; box-shadow: 0 0 0 0.2rem rgba(102,126,234,0.25); border-radius: 10px; }
+    .fade-in { animation: fadeIn 0.8s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .loading { pointer-events: none; opacity: 0.7; }
+  </style>
+</head>
+<body class="d-flex align-items-center justify-content-center p-3">
+  <div class="card fade-in p-4" style="max-width: 400px; width: 100%;">
+    <div class="text-center mb-4">
+      <i class="fas fa-user-plus fa-3x text-primary mb-3"></i>
+      <h2 class="fw-bold text-dark">Fill Details</h2>
+      <p class="text-muted">Quick & Easy</p>
+    </div>
+    
+    <form id="userForm" novalidate>
+      <div class="mb-3">
+        <label class="form-label fw-bold">Name</label>
+        <input type="text" class="form-control" id="name" required minlength="2">
+        <div class="invalid-feedback">Name cannot be empty!</div>
+      </div>
+      <div class="mb-4">
+        <label class="form-label fw-bold">Instagram ID</label>
+        <input type="text" class="form-control" id="instagram" required placeholder="@username">
+        <div class="invalid-feedback">Must start with @, no spaces, min 3 chars after @</div>
+      </div>
+      <button type="submit" class="btn btn-primary w-100 mb-3" id="sendBtn">
+        <span class="send-text">Send</span>
+        <span class="loading-text" style="display:none;"><i class="fas fa-spinner fa-spin"></i> Sending...</span>
+      </button>
+    </form>
+
+    <!-- Success Alert -->
+    <div id="successAlert" class="alert alert-success alert-dismissible fade show" style="display:none;">
+      <i class="fas fa-check-circle me-2"></i>
+      <strong>Thank you!</strong> Your response has been recorded.
+    </div>
+
+    <!-- Error Alert -->
+    <div id="errorAlert" class="alert alert-danger alert-dismissible fade show" style="display:none;">
+      <i class="fas fa-exclamation-circle me-2"></i>
+      <strong>Error:</strong> <span id="errorMsg"></span>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal fade" id="confirmModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header border-0 pb-1">
+          <h5 class="modal-title"><i class="fas fa-check-double text-success me-2"></i>Confirm Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body text-center py-4">
+          <i class="fas fa-user-check fa-3x text-primary mb-3"></i>
+          <div id="modalContent"></div>
+          <p class="text-muted small mt-3 mb-0">Is this correct?</p>
+        </div>
+        <div class="modal-footer border-0 justify-content-center">
+          <button type="button" class="btn btn-outline-secondary px-4" id="editBtn">Edit</button>
+          <button type="button" class="btn btn-primary px-4" id="confirmBtn">
+            <i class="fas fa-paper-plane me-1"></i>Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Vanilla JS Logic - Beginner friendly with comments
+    const form = document.getElementById('userForm');
+    const sendBtn = document.getElementById('sendBtn');
+    const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+    const modalContent = document.getElementById('modalContent');
+    let currentData = {};
+
+    // Form Submit - Validation + Modal
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Bootstrap validation
+      if (!form.checkValidity()) {
+        form.classList.add('was-validated');
+        return;
+      }
+
+      // Custom Instagram validation
+      const instagram = document.getElementById('instagram').value.trim();
+      if (!instagram.startsWith('@') || instagram.includes(' ') || instagram.length < 4) {
+        showError('Instagram must start with @, no spaces, min 3 chars after @');
+        return;
+      }
+
+      // Store data & show modal
+      currentData = {
+        name: document.getElementById('name').value.trim(),
+        instagram
+      };
+      const now = new Date();
+      modalContent.innerHTML = `
+        <div class="fw-bold fs-5 text-dark mb-2">${currentData.name}</div>
+        <div class="text-primary fs-6 mb-2">${currentData.instagram}</div>
+        <div class="text-muted small">${now.toLocaleString()}</div>
+      `;
+      confirmModal.show();
+    });
+
+        // Confirm button - Send to backend (ye same rakh)
+        document.getElementById('confirmBtn').addEventListener('click', async () => {
+          // ... tera perfect code
+        });
+
+        // Enter key on Confirm button bhi kaam kare  ← YE PERFECT HAI!
+        document.getElementById('confirmBtn').addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();  // ← YE IMPORTANT HAI!
+            this.click();        // ← YE BHI PERFECT
+          }
+        });
+
+
+      try {
+        const response = await fetch('/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(currentData)
+        });
+        const result = await response.json();
+
+        confirmModal.hide();
+        if (result.success) {
+          showSuccess(result.message);
+          form.reset();
+          form.classList.remove('was-validated');
+        } else {
+          showError(result.error);
+        }
+      } catch (err) {
+        showError('Network error! Try again.');
+      } finally {
+        sendBtn.classList.remove('loading');
+        sendBtn.querySelector('.send-text').style.display = 'inline';
+        sendBtn.querySelector('.loading-text').style.display = 'none';
+      }
+    });
+
+    // Edit button
+    document.getElementById('editBtn').addEventListener('click', () => {
+      confirmModal.hide();
+    });
+
+    // Alert helpers
+    function showSuccess(msg) {
+      const alert = document.getElementById('successAlert');
+      alert.querySelector('strong').nextSibling.textContent = msg;
+      alert.style.display = 'block';
+      setTimeout(() => alert.style.display = 'none', 5000);
+    }
+    function showError(msg) {
+      document.getElementById('errorMsg').textContent = msg;
+      document.getElementById('errorAlert').style.display = 'block';
+      setTimeout(() => document.getElementById('errorAlert').style.display = 'none', 5000);
+    }
+  </script>
+</body>
+</html>
